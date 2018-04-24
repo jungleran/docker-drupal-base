@@ -11,14 +11,14 @@ RUN echo "deb http://mirrors.aliyun.com/debian/ stretch main non-free contrib" >
 # Basic tools.
 RUN apt-get update; apt-get install wget git vim -y
 
+# Set composer home
+ENV COMPOSER_HOME /var/www/html/composer
+
 # Composer with mirror.
 RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.6.3 \
     && rm composer-setup.php \
     && composer config -g repo.packagist composer https://packagist.phpcomposer.com
-
-# Set composer home
-ENV COMPOSER_HOME /var/www/html/composer
 
 # Modify default apache docroot.
 RUN sed -i "s/\/var\/www\/html/\/var\/www\/html\/web/g" /etc/apache2/sites-available/000-default.conf
