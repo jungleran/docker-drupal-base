@@ -1,4 +1,4 @@
-FROM drupal:8.5.2-apache
+FROM drupal:8.5.3-apache
 
 MAINTAINER Jungle Ran <jungle.r@intergreat.com>
 
