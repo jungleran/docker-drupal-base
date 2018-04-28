@@ -30,11 +30,13 @@ RUN apt-get install ruby ruby-dev -y \
 # Install bootstrap and compass package.
 RUN gem install bootstrap-sass:3.3.7 compass:1.0.3
 
-# Nodejs with mirror.
+# Nodejs.
 RUN apt-get install gnupg -y \
-    && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g cnpm --registry=https://registry.npm.taobao.org
+   && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
+   && apt-get install -y nodejs
+
+# Install cnpm mirror.
+RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 # Extensions: uploadprogress, bcmath, mcrypt.
 RUN git clone https://github.com/Jan-E/uploadprogress.git /tmp/php-uploadprogress \
