@@ -1,4 +1,4 @@
-FROM drupal:8.5.3-apache
+FROM drupal:8.5.4-apache
 
 MAINTAINER Jungle Ran <jungle.r@intergreat.com>
 
@@ -9,7 +9,7 @@ RUN echo "deb http://mirrors.aliyun.com/debian/ stretch main non-free contrib" >
     && echo "deb-src http://mirrors.aliyun.com/debian/ stretch-proposed-updates main non-free contrib" >> /etc/apt/sources.list
 
 # Basic tools.
-RUN apt-get update; apt-get install wget git vim -y
+RUN apt-get update; apt-get upgrade -y; apt-get install wget git vim -y
 
 # Set composer home
 ENV COMPOSER_HOME /var/www/html/composer
@@ -60,3 +60,27 @@ RUN apt-get install libxml2-dev -y \
     && apt-get install libssh2-1-dev -y \
     && pecl install ssh2-1.1.2 \
     && docker-php-ext-enable ssh2
+
+# LDAP extension.
+RUN apt-get update \
+    && apt-get install -y libldap2-dev \
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
+    && docker-php-ext-install ldap
+
+# Imagick extension
+RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends libmagickwand-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && pecl install imagick-3.4.3 \
+    && docker-php-ext-enable imagick
+
+# Install ImageMagick
+RUN wget https://www.imagemagick.org/download/ImageMagick.tar.gz -O /ImageMagick.tar.gz \
+    && cd / \
+    && tar xvzf ImageMagick.tar.gz \
+    && cd ImageMagick-* \
+    && ./configure \
+    && make \
+    && make install \
+    && ldconfig /usr/local/lib
