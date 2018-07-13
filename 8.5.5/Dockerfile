@@ -1,4 +1,4 @@
-FROM drupal:8.5.4-apache
+FROM drupal:8.5.5-apache
 
 MAINTAINER Jungle Ran <jungle.r@intergreat.com>
 
@@ -84,3 +84,8 @@ RUN wget https://www.imagemagick.org/download/ImageMagick.tar.gz -O /ImageMagick
     && make \
     && make install \
     && ldconfig /usr/local/lib
+
+RUN apt-get install rsyslog \
+    && echo 'local0.* /var/www/html/applyto.log' >> /etc/rsyslog.conf
+    && service rsyslog --full-restart
+
