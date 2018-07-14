@@ -85,7 +85,7 @@ RUN wget https://www.imagemagick.org/download/ImageMagick.tar.gz -O /ImageMagick
     && make install \
     && ldconfig /usr/local/lib
 
-RUN apt-get install rsyslog \
+RUN apt-get update \
+    && apt-get install rsyslog -y\
     && echo 'local0.* /var/www/html/applyto.log' >> /etc/rsyslog.conf \
     && service rsyslog --full-restart
-
